@@ -1,0 +1,11 @@
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.env
+*.osm
+*.osm.pbf
+*.pbf
+cafe_bandung.csv
+.DS_Store
