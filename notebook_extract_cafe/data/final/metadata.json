@@ -1,6 +1,6 @@
 {
-  "dibuat": "2026-10-17T08:32:39+00:00",
-  "snapshot_osm": "2026-10-17 08:23:49+00:00",
+  "dibuat": "2026-10-17T08:54:12+00:00",
+  "snapshot_osm": "2026-10-17 08:45:35+00:00",
   "sumber": [
     "Disbudpar Kota Bandung (Open Data Kota Bandung)",
     "© OpenStreetMap contributors (ODbL)"
@@ -10,32 +10,35 @@
     "kopi_utama"
   ],
   "jumlah": {
-    "total_kandidat": 1699,
-    "final": 269,
+    "total_kandidat": 1703,
+    "final": 278,
+    "duplikat_dibuang": 6,
+    "cek_manual": 4,
     "per_sumber_final": {
       "osm": 216,
-      "pemkot+osm": 33,
-      "pemkot": 20
+      "pemkot": 33,
+      "pemkot+osm": 29
     },
     "per_kategori_semua": {
-      "kopi_utama": 1008,
+      "kopi_utama": 995,
       "cafe_ambigu": 244,
-      "osm_cafe": 148,
+      "osm_cafe": 150,
+      "kopi_hybrid": 108,
       "non_kopi": 95,
-      "kopi_hybrid": 92,
-      "teashop": 52,
+      "teashop": 51,
       "donut_bakery": 43,
       "bubbletea": 17
     },
     "sumber_koordinat_semua": {
-      "tanpa_koordinat(belum)": 1195,
+      "tanpa_koordinat(belum)": 1153,
       "osm": 459,
-      "geocode_jalan_pendek": 14,
-      "geocode_bangunan": 12,
-      "tanpa_koordinat(jalan)": 8,
-      "tanpa_koordinat(gagal)": 5,
-      "tanpa_koordinat(kelurahan)": 3,
+      "geocode_bangunan": 29,
+      "tanpa_koordinat(jalan)": 22,
+      "geocode_jalan_pendek": 22,
+      "tanpa_koordinat(gagal)": 8,
+      "tanpa_koordinat(kelurahan)": 5,
       "geocode_poi": 2,
+      "geocode_poi_dekat_alamat": 2,
       "geocode_gedung": 1
     }
   }
