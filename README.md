@@ -1,236 +1,246 @@
-# OSM Cafe Data Extractor
+# Rekomendasi Lokasi Coffee Shop di Kota Bandung
 
-A Python script to extract cafe locations and metadata from OpenStreetMap (OSM) `.osm.pbf` files and export the results to CSV for data analysis and research.
+Sistem rekomendasi lokasi usaha coffee shop berbasis data geospasial. Repositori ini berisi seluruh alur skripsi:
 
-## Overview
+1. Mengumpulkan data coffee shop dari Open Data Kota Bandung dan OpenStreetMap.
+2. Membentuk fitur spasial dengan **KDE** dan **KNN**.
+3. Mengelompokkan wilayah dengan **K-Means** dan **HDBSCAN**, lalu membandingkan keduanya.
+4. Menampilkan hasilnya di **website React**: peta kawasan, peringkat kecamatan sesuai kebutuhan pengusaha, perkiraan modal, laporan PDF, dan chatbot AI.
 
-This project uses PyOsmium to process OpenStreetMap data and pandas to organize the extracted records into a CSV file.
-
-The script filters OSM objects tagged with `amenity=cafe` and collects their available metadata, including:
-
-- OSM object type and ID
-- Cafe name and brand
-- Cuisine information
-- Latitude and longitude
-- Street address
-- All available OSM tags
-
-## Features
-
-- Extract cafe records from OSM PBF files.
-- Process nodes, ways, and relations.
-- Export extracted records to CSV.
-- Preserve additional OSM tags for further analysis.
-- Support local processing of downloaded OSM data.
-
-## Requirements
-
-- Python 3.11 or later recommended
-- pip
-- An OpenStreetMap `.osm.pbf` data file
-- PyOsmium
-- pandas
-
-The installation commands below use Python 3.12.
-
-## Installation
-
-### 1. Clone the repository
-
-Replace `YOUR_USERNAME` with the GitHub account that owns this repository.
-
-```bash
-git clone https://github.com/YOUR_USERNAME/ExtractingDataSkripsi.git
-cd ExtractingDataSkripsi
+```
+Data mentah ─► Ekstraksi & geocoding ─► Fitur KDE + KNN + demografi + akses ─► K-Means / HDBSCAN ─► Website
+(Pemkot, OSM)   (notebook_extract_cafe)        (notebook_rekomendasi)                               (web)
 ```
 
-### 2. Create a virtual environment
+---
 
-**macOS / Linux**
+## Daftar isi
+- [Struktur repositori](#struktur-repositori)
+- [Tech stack](#tech-stack)
+- [Perubahan (changelog)](#perubahan-changelog)
+- [Cara menjalankan](#cara-menjalankan)
+- [Hasil utama](#hasil-utama)
+- [Sumber data & lisensi](#sumber-data--lisensi)
 
+---
+
+## Struktur repositori
+
+```text
+ExtractingDataSkripsi/
+├── notebook_extract_cafe/          TAHAP 1: dataset coffee shop
+│   ├── coffeshop_extract_v2.ipynb    notebook ekstraksi utama (dipakai)
+│   ├── coffeshop_extract.ipynb       versi 1 (arsip)
+│   └── data/
+│       ├── raw/                      CSV Disbudpar, batas kota & kecamatan
+│       ├── interim/                  hasil OSM, cache geocoding, jaringan jalan, hasil pencocokan
+│       └── final/                    coffeeshop_bandung.csv/.geojson (400 coffee shop), metadata,
+│                                     perlu_review_koordinat.csv, sampel_validasi.csv
+│
+├── notebook_rekomendasi/           TAHAP 2: model rekomendasi
+│   ├── rekomendasi_v2.ipynb          KDE + KNN → integrasi fitur → K-Means vs HDBSCAN → ekspor web
+│   ├── scrape_harga_gofood.ipynb     tingkat harga coffee shop dari GoFood (untuk perkiraan revenue)
+│   ├── requirements.txt
+│   └── data/
+│       ├── raw/                      potongan raster WorldPop Bandung
+│       ├── interim/                  fasilitas OSM (kampus, sekolah, kantor, mall), outlet GoFood
+│       └── output/                   grid fitur + cluster, tabel evaluasi, profil cluster, benchmark, gambar
+│
+├── web/                            TAHAP 3: website
+│   ├── src/                          aplikasi React (peta, analisis, laporan, chat)
+│   ├── server/                       server Node.js: proxy chatbot Gemini + penyaji hasil build
+│   ├── public/data/                  data hasil notebook rekomendasi (JSON/GeoJSON)
+│   └── README.md                     panduan khusus website
+│
+├── docs/laporan_analisa.md         draf laporan analisa sistem (kebutuhan, akurasi, fitur, pengujian)
+│
+├── coffeeshop-pipeline/            pipeline ekstraksi versi modul .py (arsip, digantikan notebook v2)
+├── rekomendasi_coffee_shop_bandung.ipynb   baseline awal (data BBBike), digantikan rekomendasi_v2
+├── lihat_cafe.py                   skrip awal: ekstrak amenity=cafe dari file .osm.pbf
+└── prep_geocode_coffeeshop.py      skrip awal persiapan geocoding
+```
+
+---
+
+## Tech stack
+
+### Pengolahan data & machine learning (Python 3.12)
+
+| Kebutuhan | Library |
+|---|---|
+| Tabel & numerik | pandas, NumPy |
+| Data spasial & proyeksi (UTM 48S) | GeoPandas, Shapely, pyproj |
+| Raster kepadatan penduduk | rasterio |
+| Grid heksagon | H3 (Uber), resolusi 9 ≈ 0,1 km² |
+| **KDE** (kepadatan) | scikit-learn `KernelDensity` (Gaussian, bandwidth 500 m) |
+| **KNN** (jarak terdekat) | SciPy `cKDTree` |
+| **Clustering** | scikit-learn `KMeans`, `HDBSCAN` |
+| Evaluasi | scikit-learn: silhouette, Davies-Bouldin, Calinski-Harabasz, Adjusted Rand Index, ROC-AUC |
+| Pencocokan nama (fuzzy) | RapidFuzz |
+| Batas wilayah | OSMnx |
+| Unduh data | requests (Overpass API, Nominatim, Photon, GoFood, WorldPop) |
+| Visualisasi | Matplotlib |
+| Lingkungan | Jupyter Notebook / VS Code |
+
+### Website
+
+| Bagian | Teknologi |
+|---|---|
+| Antarmuka | React 18, Vite 5 |
+| Peta | Leaflet 1.9 + react-leaflet, tile OpenStreetMap |
+| Laporan PDF | halaman cetak HTML + CSS `@media print` (Simpan sebagai PDF dari browser) |
+| Chatbot | Google Gemini API (default `gemini-2.5-flash`) |
+| Server | Node.js 24 (modul `http` bawaan, tanpa framework); API key disimpan di `web/.env` |
+| Render jawaban AI | marked + DOMPurify |
+| Pengujian | Vitest (20 uji unit) |
+
+### Sumber data
+
+| Data | Sumber |
+|---|---|
+| Daftar usaha kafe/restoran 2020–2024 | Disbudpar, Open Data Kota Bandung |
+| Coffee shop, kampus, sekolah, kantor, mall, jalan | OpenStreetMap via Overpass API |
+| Geocoding alamat | Nominatim & Photon (berbasis OSM) |
+| Kepadatan penduduk | WorldPop Global2 R2025A, 2025, 100 m |
+| Kisaran harga coffee shop | GoFood, halaman daftar publik |
+
+---
+
+## Perubahan (changelog)
+
+### Tahap 1: ekstraksi coffee shop (`notebook_extract_cafe/coffeshop_extract_v2.ipynb`)
+
+- **Cek nomor rumah saat geocoding.** Hasil berupa bangunan hanya dihitung presisi `bangunan` kalau nomor rumahnya cocok dengan alamat Pemkot. Kalau tidak cocok, presisinya diturunkan menjadi `jalan`. Sebelumnya, POI mana pun di jalan yang sama lolos.
+- **Panjang jalan sebenarnya.** Presisi `jalan_pendek` sekarang diukur dari panjang seluruh jalan bernama (jaringan jalan OSM, `jalan_osm.geojson`), bukan dari satu ruas. Jalan dengan nama sama di tempat lain ditandai ambigu.
+- **Penanda `mungkin_tutup`.** Coffee shop yang terakhir tercatat di data Pemkot sebelum 2023 diberi tanda. Bisa juga dibuang lewat `BUANG_MUNGKIN_TUTUP`.
+- **Daftar review dipersempit.** `perlu_review_koordinat.csv` sekarang hanya berisi kategori coffee shop di dalam Kota Bandung, diurutkan per kecamatan.
+- **Perbaikan teknis.**
+  - Cache geocoding dibaca dengan aman lintas OS (UTF-8 / cp1252).
+  - Referensi konfigurasi dirapikan.
+  - Ada sel `%pip install` di awal notebook.
+- **Hasil:** 400 coffee shop berkoordinat layak. Sebelumnya 695, tetapi sebagian presisinya semu.
+
+### Tahap 2: model rekomendasi (`notebook_rekomendasi/`), baru
+
+- **Input:**
+  - Coffee shop dataset v2 sebagai kompetitor.
+  - Fasilitas pendukung OSM: kampus, sekolah, perkantoran, pusat perbelanjaan.
+  - Jaringan jalan.
+  - Kepadatan penduduk WorldPop 2025.
+- **Grid:** H3 resolusi 9, 1.599 sel.
+- **Fitur:** 14 fitur per sel, terdiri dari 5 KDE, 6 KNN, 1 demografi, dan 2 aksesibilitas (jarak ke jalan utama, kerapatan jalan). Semua fitur ditransformasi log1p lalu dinormalisasi z-score.
+- **Clustering:**
+  - K-Means: k dipilih dari silhouette.
+  - HDBSCAN: grid search 50 konfigurasi.
+  - Ablation study pada 4 set fitur.
+- **Evaluasi:**
+  - Metrik internal.
+  - Koherensi spasial.
+  - Stabilitas bootstrap (ARI).
+  - Validasi hold-out 5-fold.
+  - Validasi temporal: coffee shop baru 2023–2024 dipakai sebagai data uji.
+- **Interpretasi:** setiap cluster dilabeli kawasan *potensial*, *kompetitif*, atau *potensi rendah*.
+- **Ringkasan per kecamatan** untuk peringkat dan laporan.
+- **Harga pasar:** tingkat harga 301 coffee shop dari halaman daftar publik GoFood.
+  - Hanya halaman yang diizinkan robots.txt.
+  - Jeda 3 detik per halaman.
+  - Berhenti otomatis kalau diblokir.
+- **Benchmark:** waktu proses dan memori per tahap dicatat untuk analisis kebutuhan perangkat.
+
+### Tahap 3: website (`web/`), baru
+
+- **Peta Rekomendasi:**
+  - Kawasan potensial, kompetitif, dan potensi rendah, dengan pilihan K-Means atau HDBSCAN.
+  - Pewarnaan per fitur.
+  - Lapisan fasilitas dan filter kecamatan.
+  - Klik lokasi untuk melihat detail dan 5 titik potensial terdekat.
+- **Analisis & Laporan:**
+  - Pengguna mengatur target pasar, toleransi kompetisi, segmen harga, tipe usaha, penjualan per hari, dan sewa.
+  - Hasilnya: peringkat 30 kecamatan beserta alasan, peta skor, dan perkiraan revenue, laba, modal awal, serta waktu balik modal.
+- **Dokumen laporan PDF:** preferensi, 5 kecamatan teratas, peta, rincian modal, peringkat lengkap, metode, dan keterbatasan. Bisa ditambah ringkasan dari AI.
+- **Chatbot AI (Gemini):** menjawab berdasarkan data sistem, yaitu preferensi, peringkat, asumsi biaya, dan lokasi yang diklik.
+- **K-Means vs HDBSCAN:** tabel metrik, ablation, profil cluster.
+- **Data & Metode:** sumber data, parameter, asumsi biaya, waktu proses, keterbatasan.
+
+### Dokumen
+- `docs/laporan_analisa.md`: draf laporan analisa, mencakup kebutuhan sistem, cara kerja, metode pengecekan akurasi, fitur, pengujian black box dan white box, serta jawaban rumusan masalah.
+
+---
+
+## Cara menjalankan
+
+### Prasyarat
+- Python ≥ 3.10 (diuji 3.12)
+- Node.js ≥ 20 (diuji 24)
+- Internet untuk menjalankan notebook pertama kali
+
+### 1. Lingkungan Python
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate          # Windows: .venv\Scripts\Activate.ps1
+pip install -r notebook_extract_cafe/requirements.txt -r notebook_rekomendasi/requirements.txt
 ```
+Di VS Code, pastikan kernel notebook memakai `.venv`: klik nama kernel di kanan atas, lalu **Select Another Kernel → .venv**. Setiap notebook juga punya sel `%pip install` di bagian atas.
 
-**Windows PowerShell**
+### 2. Notebook (urutannya penting)
+1. `notebook_extract_cafe/coffeshop_extract_v2.ipynb`: menghasilkan `data/final/coffeeshop_bandung.csv`.
+2. `notebook_rekomendasi/scrape_harga_gofood.ipynb`: opsional, untuk data harga.
+3. `notebook_rekomendasi/rekomendasi_v2.ipynb`: menulis data website ke `web/public/data/`.
 
-```powershell
-py -3 -m venv .venv
-.venv\Scripts\Activate.ps1
-```
+Hasil semua langkah sudah ada di repositori. Jadi website bisa langsung dijalankan tanpa menjalankan notebook.
 
-### 3. Install dependencies
-
+### 3. Website
 ```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+cd web
+npm install
+cp .env.example .env               # isi GEMINI_API_KEY (gratis: https://aistudio.google.com/apikey)
+npm run dev                        # http://localhost:5173 (website + server chatbot)
+npm test                           # uji unit
 ```
+Tanpa API key, website tetap berjalan; hanya chatbot yang nonaktif. Rincian lengkap ada di [web/README.md](web/README.md).
 
-### 4. Verify the installation
+---
 
+## Hasil utama
+
+| | K-Means | HDBSCAN |
+|---|---|---|
+| Silhouette | 0,195 | 0,125 |
+| Stabilitas (ARI) | 0,886 | 0,531 |
+| AUC hold-out | 0,713 | 0,576 |
+| AUC validasi temporal | 0,760 | 0,651 |
+| Noise | 0% | 22,6% |
+
+- **K-Means lebih cocok untuk data grid kota.** Hasilnya 3 kawasan yang jelas di peta:
+  - kompetitif: pusat kota (Coblong, Lengkong, Bandung Wetan);
+  - potensial: cincin transisi;
+  - potensi rendah: pinggiran.
+- **HDBSCAN tidak menemukan struktur kepadatan yang jelas.** Ciri wilayah berubah bertahap dari pusat ke pinggiran.
+- **98% coffee shop baru (2023–2024) muncul di kawasan potensial atau kompetitif.** Sebagian besar justru di kawasan kompetitif, sesuai pola aglomerasi.
+
+Pembahasan lengkap ada di [docs/laporan_analisa.md](docs/laporan_analisa.md).
+
+### Keterbatasan
+- Baru 400 coffee shop yang berkoordinat cukup tepat. Sekitar 620 lainnya masih perlu review, jadi kepadatan kompetitor bisa lebih rendah dari kenyataan.
+- Harga GoFood berupa rentang dari sampel outlet, bukan menu lengkap.
+- Biaya dan modal adalah **asumsi awal** di `web/src/bisnis.js`. Angka ini perlu divalidasi lewat wawancara pemilik coffee shop.
+- Rekomendasi menunjukkan kecocokan kawasan, bukan jaminan keuntungan. Data sewa, daya beli, dan lalu lintas pejalan kaki tidak tersedia.
+
+---
+
+## Sumber data & lisensi
+
+- © OpenStreetMap contributors, [ODbL](https://www.openstreetmap.org/copyright)
+- Open Data Kota Bandung, Disbudpar
+- WorldPop (2025), Global2 R2025A, CC BY 4.0
+- GoFood: hanya halaman publik yang diizinkan robots.txt, untuk keperluan penelitian akademik. Cache halaman mentah tidak dipublikasikan.
+
+Lisensi kode sumber ditentukan oleh pemilik repositori.
+
+### Skrip awal (`lihat_cafe.py`)
+Skrip pertama proyek ini. Isinya mengekstrak objek `amenity=cafe` dari file `.osm.pbf` (BBBike/Geofabrik) ke `cafe_bandung.csv`:
 ```bash
-python -c "import osmium, pandas; print('Installation successful')"
-```
-
-## Download OSM Data
-
-The script requires a local `.osm.pbf` file as input. It does not automatically download data from OpenStreetMap.
-
-You can obtain regional extracts from:
-
-- [BBBike OpenStreetMap Extract Service](https://extract.bbbike.org/extract.html)
-- [Geofabrik Download Server](https://download.geofabrik.de/)
-
-Choose an area that covers your intended research region and download the data in PBF format.
-
-For a cafe dataset covering Bandung, use a suitable Bandung-area extract. Verify the geographic coverage of the downloaded file before running the script.
-
-Place the downloaded file in the project directory, or provide its path when running the script.
-
-Example:
-
-```text
-ExtractingDataSkripsi/
-├── .gitignore
-├── README.md
-├── requirements.txt
-├── lihat_cafe.py
-└── bandung.osm.pbf
-```
-
-The PBF file is local input data and should not be committed to Git.
-
-## Usage
-
-Run the script from the project directory:
-
-```bash
+pip install osmium pandas
 python lihat_cafe.py bandung.osm.pbf
 ```
-
-Replace `bandung.osm.pbf` with the actual filename or path to your downloaded PBF file.
-
-For example, if the file is stored in a `data` directory:
-
-```bash
-python lihat_cafe.py data/bandung.osm.pbf
-```
-
-The script prints:
-
-- The total number of extracted cafe objects
-- The number of objects grouped by OSM type
-- The 15 most frequent cafe names
-
-It then generates:
-
-```text
-cafe_bandung.csv
-```
-
-The output is saved in the current working directory.
-
-## Output Schema
-
-| Column | Description |
-|---|---|
-| `osm_type` | OSM object type: node, way, or relation |
-| `osm_id` | Identifier of the OSM object |
-| `name` | Cafe name, if available |
-| `brand` | Brand name, if available |
-| `cuisine` | Cuisine tag, if available |
-| `lat` | Latitude |
-| `lon` | Longitude |
-| `alamat` | Street address from `addr:street`, if available |
-| `semua_tag` | String representation of the object's OSM tags |
-
-Missing information may be represented by empty values or missing coordinates.
-
-## Important Considerations
-
-### 1. Geographic coverage
-
-The output filename does not determine the geographic area of the dataset. The extracted records depend on the contents of the input PBF file.
-
-### 2. Duplicate locations
-
-A physical cafe may be represented by more than one OSM object, such as a node and a building outline. The script extracts matching objects and does not perform physical-location deduplication.
-
-### 3. Coordinate accuracy
-
-For ways, the current implementation calculates the arithmetic mean of the available node coordinates. This is an approximate location and is not necessarily the geometric centroid of the building.
-
-Relations are currently exported without calculated coordinates.
-
-### 4. Incomplete metadata
-
-Not every OSM object contains a name, brand, cuisine, or street address. Missing fields do not necessarily indicate an invalid record.
-
-The filter `amenity=cafe` only selects objects carrying that exact tag.
-
-### 5. Large input files
-
-Regional PBF files can be large. Processing time and memory requirements depend on the file size, geographic coverage, and available system resources.
-
-### 6. Data licensing and attribution
-
-OpenStreetMap data is available under the Open Database License (ODbL).
-
-If you publish or redistribute derived datasets, follow the applicable attribution and licensing requirements.
-
-Attribution: © OpenStreetMap contributors
-
-More information: [OpenStreetMap Copyright and License](https://www.openstreetmap.org/copyright)
-
-## Troubleshooting
-
-**ModuleNotFoundError**
-
-Ensure the virtual environment is activated and install the dependencies:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-**IndexError: list index out of range**
-
-Provide the input PBF filename when running the script:
-
-```bash
-python lihat_cafe.py bandung.osm.pbf
-```
-
-**FileNotFoundError**
-
-Check that the PBF filename and path are correct:
-
-```bash
-ls -lh
-```
-
-**Invalid or missing coordinates**
-
-Some OSM objects may not have usable coordinates. Relations are not assigned coordinates by the current implementation, and ways may have invalid or incomplete location data.
-
-## Project Structure
-
-```text
-ExtractingDataSkripsi/
-├── .gitignore
-├── README.md
-├── requirements.txt
-└── lihat_cafe.py
-```
-
-## License
-
-This repository's source-code license should be specified by the repository owner. OpenStreetMap data has its own licensing terms, which apply independently of the source code.
-
-## Acknowledgements
-
-- [OpenStreetMap](https://www.openstreetmap.org/)
-- [PyOsmium](https://osmcode.org/pyosmium/)
-- [pandas](https://pandas.pydata.org/)
-
-
+File `.pbf` tidak di-commit karena ukurannya besar.
