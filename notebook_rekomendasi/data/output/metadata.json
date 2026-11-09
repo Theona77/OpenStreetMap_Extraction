@@ -1,0 +1,598 @@
+{
+ "dibuat": "2026-11-07T20:39:21+00:00",
+ "sumber": {
+  "coffee_shop": "Dataset v2 (400 coffee shop; Disbudpar Kota Bandung + OSM, snapshot 2026-10-29 17:28:51+00:00)",
+  "fasilitas": "OpenStreetMap via Overpass, snapshot 2026-11-07 12:37:17+00:00",
+  "jalan": "OpenStreetMap via Overpass, snapshot 2026-11-06 09:05:58+00:00",
+  "penduduk": "WorldPop Global2 R2025A, 2025, 100 m constrained (CC BY 4.0)"
+ },
+ "parameter": {
+  "h3_res": 9,
+  "luas_sel_km2": 0.1045,
+  "bandwidth": {
+   "scott_m": 1022,
+   "cv_m": 500,
+   "dipakai_m": 500
+  },
+  "radius_kerapatan_jalan_m": 500,
+  "set_utama": "LENGKAP",
+  "fitur": {
+   "KNN": [
+    "d_kopi_1",
+    "d_kopi_3",
+    "d_kampus",
+    "d_sekolah",
+    "d_kantor",
+    "d_belanja"
+   ],
+   "KDE": [
+    "kde_kopi",
+    "kde_kampus",
+    "kde_sekolah",
+    "kde_kantor",
+    "kde_belanja"
+   ],
+   "KNN+KDE": [
+    "d_kopi_1",
+    "d_kopi_3",
+    "d_kampus",
+    "d_sekolah",
+    "d_kantor",
+    "d_belanja",
+    "kde_kopi",
+    "kde_kampus",
+    "kde_sekolah",
+    "kde_kantor",
+    "kde_belanja"
+   ],
+   "LENGKAP": [
+    "d_kopi_1",
+    "d_kopi_3",
+    "d_kampus",
+    "d_sekolah",
+    "d_kantor",
+    "d_belanja",
+    "kde_kopi",
+    "kde_kampus",
+    "kde_sekolah",
+    "kde_kantor",
+    "kde_belanja",
+    "penduduk_km2",
+    "d_jalan_utama",
+    "kerapatan_jalan"
+   ]
+  },
+  "f_pendukung": [
+   "kde_kampus",
+   "kde_sekolah",
+   "kde_kantor",
+   "kde_belanja",
+   "penduduk_km2",
+   "kerapatan_jalan"
+  ],
+  "kmeans": {
+   "n_clusters": 3
+  },
+  "hdbscan": {
+   "min_cluster_size": 10,
+   "min_samples": 1,
+   "cluster_selection_method": "eom"
+  },
+  "hdbscan_tingkat_aturan": 2,
+  "pakai_mungkin_tutup": true
+ },
+ "jumlah": {
+  "sel": 1599,
+  "coffee_shop": 400,
+  "fasilitas": {
+   "kantor": 710,
+   "sekolah": 539,
+   "kampus": 106,
+   "belanja": 91
+  },
+  "penduduk_worldpop": 2568343
+ },
+ "evaluasi": [
+  {
+   "set_fitur": "KNN",
+   "algoritma": "K-Means",
+   "parameter": "{'n_clusters': 3}",
+   "tingkat_aturan": null,
+   "n_cluster": 3,
+   "noise_pct": 0.0,
+   "silhouette": 0.2179,
+   "davies_bouldin": 1.491,
+   "calinski_harabasz": 708.4429,
+   "tetangga_sama_label": 0.772,
+   "z_spasial": 66.626,
+   "ARI_mean": 0.8886,
+   "ARI_std": 0.0678,
+   "AUC_holdout": null,
+   "AUC_holdout_std": null,
+   "AUC_temporal": null,
+   "n_baru": null,
+   "pct_baru_di_potensial_kompetitif": null,
+   "pct_luas_potensial_kompetitif": null,
+   "pct_baru_di_potensial": null,
+   "pct_luas_potensial": null
+  },
+  {
+   "set_fitur": "KNN",
+   "algoritma": "HDBSCAN",
+   "parameter": "{'min_cluster_size': 10, 'min_samples': 1, 'cluster_selection_method': 'eom'}",
+   "tingkat_aturan": 2.0,
+   "n_cluster": 2,
+   "noise_pct": 16.3852,
+   "silhouette": 0.2343,
+   "davies_bouldin": 0.9003,
+   "calinski_harabasz": 28.1782,
+   "tetangga_sama_label": 0.9912,
+   "z_spasial": 6.436,
+   "ARI_mean": 0.6065,
+   "ARI_std": 0.234,
+   "AUC_holdout": null,
+   "AUC_holdout_std": null,
+   "AUC_temporal": null,
+   "n_baru": null,
+   "pct_baru_di_potensial_kompetitif": null,
+   "pct_luas_potensial_kompetitif": null,
+   "pct_baru_di_potensial": null,
+   "pct_luas_potensial": null
+  },
+  {
+   "set_fitur": "KDE",
+   "algoritma": "K-Means",
+   "parameter": "{'n_clusters': 4}",
+   "tingkat_aturan": null,
+   "n_cluster": 4,
+   "noise_pct": 0.0,
+   "silhouette": 0.3305,
+   "davies_bouldin": 1.2744,
+   "calinski_harabasz": 940.1087,
+   "tetangga_sama_label": 0.8656,
+   "z_spasial": 84.4598,
+   "ARI_mean": 0.9243,
+   "ARI_std": 0.1138,
+   "AUC_holdout": null,
+   "AUC_holdout_std": null,
+   "AUC_temporal": null,
+   "n_baru": null,
+   "pct_baru_di_potensial_kompetitif": null,
+   "pct_luas_potensial_kompetitif": null,
+   "pct_baru_di_potensial": null,
+   "pct_luas_potensial": null
+  },
+  {
+   "set_fitur": "KDE",
+   "algoritma": "HDBSCAN",
+   "parameter": "{'min_cluster_size': 60, 'min_samples': 1, 'cluster_selection_method': 'eom'}",
+   "tingkat_aturan": 1.0,
+   "n_cluster": 3,
+   "noise_pct": 28.3927,
+   "silhouette": 0.4502,
+   "davies_bouldin": 0.7239,
+   "calinski_harabasz": 792.4454,
+   "tetangga_sama_label": 0.9928,
+   "z_spasial": 49.1269,
+   "ARI_mean": 0.4815,
+   "ARI_std": 0.291,
+   "AUC_holdout": null,
+   "AUC_holdout_std": null,
+   "AUC_temporal": null,
+   "n_baru": null,
+   "pct_baru_di_potensial_kompetitif": null,
+   "pct_luas_potensial_kompetitif": null,
+   "pct_baru_di_potensial": null,
+   "pct_luas_potensial": null
+  },
+  {
+   "set_fitur": "KNN+KDE",
+   "algoritma": "K-Means",
+   "parameter": "{'n_clusters': 3}",
+   "tingkat_aturan": null,
+   "n_cluster": 3,
+   "noise_pct": 0.0,
+   "silhouette": 0.2347,
+   "davies_bouldin": 1.4763,
+   "calinski_harabasz": 782.8051,
+   "tetangga_sama_label": 0.8363,
+   "z_spasial": 71.297,
+   "ARI_mean": 0.9575,
+   "ARI_std": 0.0214,
+   "AUC_holdout": null,
+   "AUC_holdout_std": null,
+   "AUC_temporal": null,
+   "n_baru": null,
+   "pct_baru_di_potensial_kompetitif": null,
+   "pct_luas_potensial_kompetitif": null,
+   "pct_baru_di_potensial": null,
+   "pct_luas_potensial": null
+  },
+  {
+   "set_fitur": "KNN+KDE",
+   "algoritma": "HDBSCAN",
+   "parameter": "{'min_cluster_size': 10, 'min_samples': 1, 'cluster_selection_method': 'eom'}",
+   "tingkat_aturan": 2.0,
+   "n_cluster": 2,
+   "noise_pct": 10.5691,
+   "silhouette": 0.438,
+   "davies_bouldin": 0.5815,
+   "calinski_harabasz": 79.5599,
+   "tetangga_sama_label": 0.9971,
+   "z_spasial": 13.6427,
+   "ARI_mean": 0.6332,
+   "ARI_std": 0.1817,
+   "AUC_holdout": null,
+   "AUC_holdout_std": null,
+   "AUC_temporal": null,
+   "n_baru": null,
+   "pct_baru_di_potensial_kompetitif": null,
+   "pct_luas_potensial_kompetitif": null,
+   "pct_baru_di_potensial": null,
+   "pct_luas_potensial": null
+  },
+  {
+   "set_fitur": "LENGKAP",
+   "algoritma": "K-Means",
+   "parameter": "{'n_clusters': 3}",
+   "tingkat_aturan": null,
+   "n_cluster": 3,
+   "noise_pct": 0.0,
+   "silhouette": 0.1951,
+   "davies_bouldin": 1.6305,
+   "calinski_harabasz": 595.3518,
+   "tetangga_sama_label": 0.8222,
+   "z_spasial": 63.0015,
+   "ARI_mean": 0.8858,
+   "ARI_std": 0.1222,
+   "AUC_holdout": 0.713,
+   "AUC_holdout_std": 0.0384,
+   "AUC_temporal": 0.7601,
+   "n_baru": 63.0,
+   "pct_baru_di_potensial_kompetitif": 98.3871,
+   "pct_luas_potensial_kompetitif": 66.4165,
+   "pct_baru_di_potensial": 11.2903,
+   "pct_luas_potensial": 41.9012
+  },
+  {
+   "set_fitur": "LENGKAP",
+   "algoritma": "HDBSCAN",
+   "parameter": "{'min_cluster_size': 10, 'min_samples': 1, 'cluster_selection_method': 'eom'}",
+   "tingkat_aturan": 2.0,
+   "n_cluster": 2,
+   "noise_pct": 22.5766,
+   "silhouette": 0.1253,
+   "davies_bouldin": 1.2076,
+   "calinski_harabasz": 14.1195,
+   "tetangga_sama_label": 0.9939,
+   "z_spasial": 7.0505,
+   "ARI_mean": 0.5311,
+   "ARI_std": 0.3197,
+   "AUC_holdout": 0.5764,
+   "AUC_holdout_std": 0.0364,
+   "AUC_temporal": 0.651,
+   "n_baru": 63.0,
+   "pct_baru_di_potensial_kompetitif": 3.2258,
+   "pct_luas_potensial_kompetitif": 6.6291,
+   "pct_baru_di_potensial": 0.0,
+   "pct_luas_potensial": 3.3771
+  }
+ ],
+ "profil": {
+  "K-Means": [
+   {
+    "cluster": 0,
+    "n_sel": 598,
+    "luas_km2": 62.4537,
+    "n_coffee_shop": 4,
+    "pct_sel_ada_coffee_shop": 0.6689,
+    "d_kopi_1_median_m": 1104.7167,
+    "kde_kopi_median": 0.0995,
+    "d_kampus_median_m": 1808.3228,
+    "d_kantor_median_m": 673.3223,
+    "d_belanja_median_m": 1423.8329,
+    "penduduk_km2_median": 12669.809,
+    "kerapatan_jalan_median": 6.3877,
+    "d_jalan_utama_median_m": 443.8046,
+    "z_pendukung": -0.6809,
+    "z_kompetisi": -0.7892,
+    "skor_peluang": 0.1083,
+    "kelas": "rendah",
+    "nama_kelas": "Kawasan potensi rendah",
+    "kecamatan_utama": "Bandung Kulon, Arcamanik, Rancasari"
+   },
+   {
+    "cluster": 1,
+    "n_sel": 336,
+    "luas_km2": 35.11,
+    "n_coffee_shop": 338,
+    "pct_sel_ada_coffee_shop": 48.5119,
+    "d_kopi_1_median_m": 181.8956,
+    "kde_kopi_median": 6.4337,
+    "d_kampus_median_m": 446.6344,
+    "d_kantor_median_m": 162.8401,
+    "d_belanja_median_m": 379.6041,
+    "penduduk_km2_median": 20237.6149,
+    "kerapatan_jalan_median": 14.2023,
+    "d_jalan_utama_median_m": 90.8437,
+    "z_pendukung": 0.9241,
+    "z_kompetisi": 1.4706,
+    "skor_peluang": -0.5466,
+    "kelas": "kompetitif",
+    "nama_kelas": "Kawasan kompetitif",
+    "kecamatan_utama": "Coblong, Lengkong, Bandung Wetan"
+   },
+   {
+    "cluster": 2,
+    "n_sel": 665,
+    "luas_km2": 69.4643,
+    "n_coffee_shop": 57,
+    "pct_sel_ada_coffee_shop": 7.6692,
+    "d_kopi_1_median_m": 471.599,
+    "kde_kopi_median": 1.108,
+    "d_kampus_median_m": 731.5096,
+    "d_kantor_median_m": 315.7728,
+    "d_belanja_median_m": 763.8794,
+    "penduduk_km2_median": 17857.7063,
+    "kerapatan_jalan_median": 11.3658,
+    "d_jalan_utama_median_m": 234.6913,
+    "z_pendukung": 0.1454,
+    "z_kompetisi": -0.0334,
+    "skor_peluang": 0.1787,
+    "kelas": "potensial",
+    "nama_kelas": "Kawasan potensial",
+    "kecamatan_utama": "Buahbatu, Sukasari, Kiaracondong"
+   }
+  ],
+  "HDBSCAN": [
+   {
+    "cluster": -1,
+    "n_sel": 361,
+    "luas_km2": 37.7124,
+    "n_coffee_shop": 276,
+    "pct_sel_ada_coffee_shop": 35.4571,
+    "d_kopi_1_median_m": 268.0527,
+    "kde_kopi_median": 2.7337,
+    "d_kampus_median_m": 504.3158,
+    "d_kantor_median_m": 195.4109,
+    "d_belanja_median_m": 580.6547,
+    "penduduk_km2_median": 17481.0615,
+    "kerapatan_jalan_median": 12.4769,
+    "d_jalan_utama_median_m": 84.6766,
+    "z_pendukung": 0.4337,
+    "z_kompetisi": 0.6999,
+    "skor_peluang": -0.2662,
+    "kelas": "noise",
+    "nama_kelas": "Tidak terklasifikasi (noise)",
+    "kecamatan_utama": "Coblong, Gedebage, Cicendo"
+   },
+   {
+    "cluster": 0,
+    "n_sel": 1228,
+    "luas_km2": 128.2711,
+    "n_coffee_shop": 118,
+    "pct_sel_ada_coffee_shop": 6.9218,
+    "d_kopi_1_median_m": 657.1738,
+    "kde_kopi_median": 0.5568,
+    "d_kampus_median_m": 1109.2694,
+    "d_kantor_median_m": 436.3711,
+    "d_belanja_median_m": 964.3996,
+    "penduduk_km2_median": 16543.3628,
+    "kerapatan_jalan_median": 9.6576,
+    "d_jalan_utama_median_m": 286.9677,
+    "z_pendukung": -0.1326,
+    "z_kompetisi": -0.2151,
+    "skor_peluang": 0.0825,
+    "kelas": "rendah",
+    "nama_kelas": "Kawasan potensi rendah",
+    "kecamatan_utama": "Cidadap, Arcamanik, Buahbatu"
+   },
+   {
+    "cluster": 1,
+    "n_sel": 10,
+    "luas_km2": 1.0445,
+    "n_coffee_shop": 5,
+    "pct_sel_ada_coffee_shop": 50.0,
+    "d_kopi_1_median_m": 162.9202,
+    "kde_kopi_median": 4.8603,
+    "d_kampus_median_m": 359.6391,
+    "d_kantor_median_m": 288.4474,
+    "d_belanja_median_m": 1165.2749,
+    "penduduk_km2_median": 19413.1803,
+    "kerapatan_jalan_median": 19.1873,
+    "d_jalan_utama_median_m": 257.4987,
+    "z_pendukung": 0.6275,
+    "z_kompetisi": 1.1525,
+    "skor_peluang": -0.5251,
+    "kelas": "kompetitif",
+    "nama_kelas": "Kawasan kompetitif",
+    "kecamatan_utama": "Lengkong, Sukasari"
+   }
+  ]
+ },
+ "pemilihan_k": [
+  {
+   "k": 2,
+   "inertia": 14799.526,
+   "silhouette": 0.2899,
+   "davies_bouldin": 1.3147
+  },
+  {
+   "k": 3,
+   "inertia": 12820.9024,
+   "silhouette": 0.1951,
+   "davies_bouldin": 1.6305
+  },
+  {
+   "k": 4,
+   "inertia": 11796.198,
+   "silhouette": 0.1537,
+   "davies_bouldin": 1.7722
+  },
+  {
+   "k": 5,
+   "inertia": 10883.455,
+   "silhouette": 0.1611,
+   "davies_bouldin": 1.782
+  },
+  {
+   "k": 6,
+   "inertia": 10054.2149,
+   "silhouette": 0.1696,
+   "davies_bouldin": 1.59
+  },
+  {
+   "k": 7,
+   "inertia": 9628.2269,
+   "silhouette": 0.1471,
+   "davies_bouldin": 1.7519
+  },
+  {
+   "k": 8,
+   "inertia": 9252.7267,
+   "silhouette": 0.1472,
+   "davies_bouldin": 1.731
+  },
+  {
+   "k": 9,
+   "inertia": 8910.8116,
+   "silhouette": 0.1373,
+   "davies_bouldin": 1.8065
+  },
+  {
+   "k": 10,
+   "inertia": 8591.8248,
+   "silhouette": 0.1341,
+   "davies_bouldin": 1.786
+  }
+ ],
+ "kesepakatan": [
+  {
+   "K-Means": "kompetitif",
+   "kompetitif": 4,
+   "noise": 198,
+   "rendah": 134
+  },
+  {
+   "K-Means": "potensial",
+   "kompetitif": 6,
+   "noise": 119,
+   "rendah": 540
+  },
+  {
+   "K-Means": "rendah",
+   "kompetitif": 0,
+   "noise": 44,
+   "rendah": 554
+  }
+ ],
+ "korelasi_tinggi": [
+  {
+   "a": "d_kopi_1",
+   "b": "d_kopi_3",
+   "r": 0.92
+  },
+  {
+   "a": "d_kopi_1",
+   "b": "kde_kopi",
+   "r": -0.9
+  },
+  {
+   "a": "d_kopi_3",
+   "b": "kde_kopi",
+   "r": -0.97
+  },
+  {
+   "a": "d_kampus",
+   "b": "kde_kampus",
+   "r": -0.97
+  },
+  {
+   "a": "d_belanja",
+   "b": "kde_belanja",
+   "r": -0.96
+  }
+ ],
+ "benchmark": {
+  "tahap": [
+   {
+    "tahap": "1a muat batas & coffee shop",
+    "detik": 0.06,
+    "puncak_memori_mb": 279
+   },
+   {
+    "tahap": "1b fasilitas OSM",
+    "detik": 0.02,
+    "puncak_memori_mb": 282
+   },
+   {
+    "tahap": "1c jalan",
+    "detik": 0.11,
+    "puncak_memori_mb": 307
+   },
+   {
+    "tahap": "1d worldpop",
+    "detik": 0.04,
+    "puncak_memori_mb": 331
+   },
+   {
+    "tahap": "2 grid H3",
+    "detik": 0.07,
+    "puncak_memori_mb": 349
+   },
+   {
+    "tahap": "3 KDE",
+    "detik": 0.09,
+    "puncak_memori_mb": 349
+   },
+   {
+    "tahap": "4 KNN",
+    "detik": 0.0,
+    "puncak_memori_mb": 349
+   },
+   {
+    "tahap": "5 demografi & aksesibilitas",
+    "detik": 0.65,
+    "puncak_memori_mb": 396
+   },
+   {
+    "tahap": "6 normalisasi",
+    "detik": 0.0,
+    "puncak_memori_mb": 396
+   },
+   {
+    "tahap": "7b K-Means pilih k",
+    "detik": 0.46,
+    "puncak_memori_mb": 441
+   },
+   {
+    "tahap": "7c HDBSCAN grid search",
+    "detik": 0.8,
+    "puncak_memori_mb": 445
+   },
+   {
+    "tahap": "8a clustering semua set",
+    "detik": 3.65,
+    "puncak_memori_mb": 495
+   },
+   {
+    "tahap": "8b stabilitas",
+    "detik": 1.79,
+    "puncak_memori_mb": 495
+   },
+   {
+    "tahap": "9b validasi eksternal",
+    "detik": 0.35,
+    "puncak_memori_mb": 495
+   },
+   {
+    "tahap": "11 simpan & ekspor",
+    "detik": 0.09,
+    "puncak_memori_mb": 495
+   }
+  ],
+  "total_detik": 8.2,
+  "puncak_memori_mb": 495,
+  "python": "3.12.14"
+ }
+}

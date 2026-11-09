@@ -9,3 +9,14 @@ __pycache__/
 *.pbf
 cafe_bandung.csv
 .DS_Store
+
+# rekomendasi: raster WorldPop Indonesia penuh (±170 MB), cukup potongan Bandung
+notebook_rekomendasi/data/raw/idn_pop_*.tif
+web/node_modules/
+web/dist/
+web/.env
+
+# checkpoint Jupyter
+.ipynb_checkpoints/
+# cache halaman GoFood mentah (jangan dipublikasikan; cukup data/interim/gofood_outlet.csv)
+notebook_rekomendasi/data/raw/gofood/

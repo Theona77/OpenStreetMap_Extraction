@@ -1,0 +1,16 @@
+tahap,detik,puncak_memori_mb
+1a muat batas & coffee shop,0.06,279
+1b fasilitas OSM,0.02,282
+1c jalan,0.11,307
+1d worldpop,0.04,331
+2 grid H3,0.07,349
+3 KDE,0.09,349
+4 KNN,0.0,349
+5 demografi & aksesibilitas,0.65,396
+6 normalisasi,0.0,396
+7b K-Means pilih k,0.46,441
+7c HDBSCAN grid search,0.8,445
+8a clustering semua set,3.65,495
+8b stabilitas,1.79,495
+9b validasi eksternal,0.35,495
+11 simpan & ekspor,0.09,495

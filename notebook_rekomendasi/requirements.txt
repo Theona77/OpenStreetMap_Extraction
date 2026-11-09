@@ -1,0 +1,13 @@
+# Diuji dengan Python 3.12
+geopandas==1.2.0
+shapely==2.2.0
+pyproj==3.8.0
+h3==4.5.0
+scikit-learn==1.9.1
+scipy==1.18.1
+rasterio==1.5.2
+requests==2.32.5
+matplotlib==3.10.6
+pandas==2.3.3
+numpy==2.5.4
+ipykernel==6.31.0

@@ -1,0 +1,29 @@
+{
+  "name": "peta-rekomendasi-coffee-shop-bandung",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n web,api -c blue,magenta \"vite\" \"npm:server\"",
+    "dev:web": "vite",
+    "server": "node --env-file-if-exists=.env server/server.js",
+    "build": "vite build",
+    "start": "npm run build && npm run server",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "dompurify": "3.2.3",
+    "leaflet": "1.9.4",
+    "marked": "15.0.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-leaflet": "4.2.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "vite": "5.4.11",
+    "vitest": "2.1.8",
+    "concurrently": "9.1.0"
+  }
+}
